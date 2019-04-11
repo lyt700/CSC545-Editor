@@ -116,28 +116,76 @@ void save_img() {
 }
 
 void grayscale_img() {
-  //TODO - Write this function
-  println("grayscale");
+  // using the formula : Val = 0.299*R + 0.587*G + 0.114*B
+  PImage grayImg = displayed_img.get();
+  grayImg.loadPixels();
+  for (int i = 0; i < grayImg.pixels.length; i++) {
+    color c = grayImg.pixels[i];
+    float gray = 0.299*red(c) + 0.587*green(c) + 0.114*blue(c);
+    grayImg.pixels[i] = color(gray);
+    updatePixels();
+  }
+  displayed_img = grayImg;    
 }
 
 void negative_img() {
-  //TODO - Write this function
-  println("negative");
+  float gain = -1.0; // gain in the linear scaling
+  float bias = 255;  // bias in the linear scaling
+  PImage negImg = displayed_img.get();
+  negImg.loadPixels();
+  for (int i = 0; i < negImg.pixels.length; i++) {
+    color c = negImg.pixels[i];
+    float r = constrain(gain * red(c) + bias, 0, 255);
+    float g = constrain(gain * green(c) + bias, 0, 255);
+    float b = constrain(gain * blue(c) + bias, 0, 255);
+    negImg.pixels[i] = color(r,g,b);
+    updatePixels();
+  }
+  displayed_img = negImg;  
 }
 
 void brighten_img() {
-  //TODO - Write this function
-  println("brighten");
+  float ba = 5.0;  // brighten amount
+  PImage brightenImg = displayed_img.get();
+  brightenImg.loadPixels();
+  for (int i = 0; i < brightenImg.pixels.length; i++) {
+    color c = brightenImg.pixels[i];
+    float r = constrain(red(c) + ba, 0, 255);
+    float g = constrain(green(c) + ba, 0, 255);
+    float b = constrain(blue(c) + ba, 0, 255);
+    brightenImg.pixels[i] = color(r,g,b);
+    updatePixels();
+  }
+  displayed_img = brightenImg;
 }
 
 void darken_img() {
-  //TODO - Write this function
-  println("darken");
+  float da = 5.0; // darken amount
+  PImage darkenImg = displayed_img.get();
+  darkenImg.loadPixels();
+  for (int i = 0; i < darkenImg.pixels.length; i++) {
+    color c = darkenImg.pixels[i];
+    float r = constrain(red(c) - da, 0, 255);
+    float g = constrain(green(c) - da, 0, 255);
+    float b = constrain(blue(c) - da, 0, 255);
+    darkenImg.pixels[i] = color(r,g,b);
+    updatePixels();
+  }
+  displayed_img = darkenImg;
 }
 
 void binary_img() {
-  //TODO - Write this function
-  println("binary");
+  float threshold = 128.0; // using threshold to modify pixels
+  PImage binImg = displayed_img.get();
+  binImg.loadPixels();
+  for (int i = 0; i < binImg.pixels.length; i++) {
+    color c = binImg.pixels[i];
+    float val = (red(c) + green(c) + blue(c))/3.0;
+    if(val >= threshold) binImg.pixels[i] = color(255);
+    else binImg.pixels[i] = color(0);
+    updatePixels();
+  }
+  displayed_img = binImg;  
 }
 
 void highlight_img() {
