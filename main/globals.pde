@@ -26,3 +26,5 @@ Button binary_button;
 Button highlight_button;
 Button brush_button;
 Button erase_button;
+Button sharp_button;
+Button blur_button;
