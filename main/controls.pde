@@ -104,7 +104,7 @@ void imgSelected(File selection) {
   if (selection == null) {
     println("Window was closed or the user hit cancel.");
   } else {
-    loaded_img = loadImage(selection.getName());
+    loaded_img = loadImage(selection.getAbsolutePath());
     displayed_img = loaded_img;
     resize_window(loaded_img);
   }
