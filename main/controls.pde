@@ -43,6 +43,14 @@ void init_controls() {
   erase_button = cp5.addButton("eraseButton");
   erase_button.setPosition(5, 290).setSize(115,30);
   erase_button.setLabel("Erase");
+    //sharpening
+  sharp_button = cp5.addButton("sharpButton");
+  sharp_button.setPosition(5, 325).setSize(115,30);
+  sharp_button.setLabel("Sharpening");
+  //bluring
+  blur_button = cp5.addButton("blurButton");
+  blur_button.setPosition(5, 360).setSize(115,30);
+  blur_button.setLabel("Bluring");
   
   //TODO - shapes
   
@@ -60,6 +68,8 @@ void draw_controls() {
     highlight_button.setPosition(5, 220).setSize(115,30);
     brush_button.setPosition(5, 255).setSize(115,30);
     erase_button.setPosition(5, 290).setSize(115,30);
+    sharp_button.setPosition(5, 325).setSize(115,30);
+    blur_button.setPosition(5, 360).setSize(115,30);
 }
 
 //method to perform operations when a control event occurs
@@ -93,6 +103,12 @@ public void controlEvent(ControlEvent theEvent) {
   }
   else   if (theEvent.getController().getName() == "eraseButton") {
     erase();
+  }
+  else   if (theEvent.getController().getName() == "sharpButton") {
+    sharp();
+  }
+  else   if (theEvent.getController().getName() == "blurButton") {
+    blur();
   }
   else   if (theEvent.getController().getName() == "nullButton") {
     dummyMethod();
@@ -202,6 +218,17 @@ void erase() {
   //TODO - Write this function
   println("erase");
 }
+
+void sharp() {
+  //TODO write a function to sharp image
+  println("sharp");
+}
+
+void blur() {
+  //TODO write a function to blur image
+  println("blur");
+}
+
 
 //image selection method
 void dummyMethod() {
