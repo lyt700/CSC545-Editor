@@ -1,4 +1,6 @@
 import controlP5.*;
+import java.util.List;
+import java.util.Arrays;
 
 void setup() {
   size(500, 500);
@@ -13,5 +15,8 @@ void draw() {
   draw_controls();
   if (displayed_img != null) {
     image(displayed_img, side_bar_width + bar_border_width, top_bar_height + bar_border_width);
+    if (brush_active && mousePressed) {
+      draw_the_line();
+    }
   }
 }
