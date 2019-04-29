@@ -16,6 +16,7 @@ int min_window_width = 1024 + side_bar_width + bar_border_width;
 
 //controls globals
 ControlP5 cp5;
+Button colors;
 Button load_button;
 Button save_button;
 Button grayscale_button;
@@ -28,3 +29,22 @@ Button brush_button;
 Button erase_button;
 Button sharp_button;
 Button blur_button;
+
+//color table globals
+boolean showColors = false;
+String[] color_label = {"black", "white", "red", "yellow", "blue", "green", "cyan", "magenta", "silver",
+                         "maroon", "gray", "teal", "navy", "olive", "purple", "orange"};
+List<String> color_labels = Arrays.asList(color_label);
+color[] color_list = {color(0), color(255), color(255, 0, 0), color(255, 255, 0), color(0, 0, 255),
+                      color(0, 255, 0), color(0, 255, 255), color(255, 0, 255), color(192, 192, 192),
+                      color(128, 0, 0), color(128, 128, 128), color(0, 128, 128), color(0, 0, 128),
+                      color(128, 128, 0), color(128, 0, 128), color(255, 165, 0)};
+Bang color_table_black, color_table_white, color_table_red, color_table_green,
+     color_table_blue, color_table_yellow, color_table_cyan, color_table_magenta,
+     color_table_silver, color_table_gray, color_table_maroon, color_table_olive,
+     color_table_purple, color_table_teal, color_table_navy, color_table_orange;
+     
+//brush globals
+boolean brush_active = false;
+color brush_color = color(0);
+int brush_size = 9;

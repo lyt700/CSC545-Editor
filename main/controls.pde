@@ -51,7 +51,10 @@ void init_controls() {
   blur_button = cp5.addButton("blurButton");
   blur_button.setPosition(5, 360).setSize(115,30);
   blur_button.setLabel("Bluring");
-  
+  //color picker button
+  colors = cp5.addButton("colors");
+  colors.setPosition(5, 395).setSize(115,30);
+  colors.setLabel("Colors");             
   //TODO - shapes
   
 }
@@ -70,6 +73,7 @@ void draw_controls() {
     erase_button.setPosition(5, 290).setSize(115,30);
     sharp_button.setPosition(5, 325).setSize(115,30);
     blur_button.setPosition(5, 360).setSize(115,30);
+    colors.setPosition(5, 395).setSize(115,30);
 }
 
 //method to perform operations when a control event occurs
@@ -109,6 +113,15 @@ public void controlEvent(ControlEvent theEvent) {
   }
   else   if (theEvent.getController().getName() == "blurButton") {
     blur();
+  }
+  else   if (theEvent.getController().getName() == "Colors") {
+    colors();
+  }
+  else   if (color_labels.contains(theEvent.getController().getName())) {
+    //find the index of selected color in color_list
+    int i = color_labels.indexOf(theEvent.getController().getName());
+    //set bursh color to selected color
+    brush_color = color_list[i];
   }
   else   if (theEvent.getController().getName() == "nullButton") {
     dummyMethod();
@@ -210,8 +223,8 @@ void highlight_img() {
 }
 
 void brush_img() {
-  //TODO - Write this function
-  println("brush");
+  if(brush_active) brush_active = false;
+  else brush_active = true;
 }
 
 void erase() {
@@ -229,7 +242,54 @@ void blur() {
   println("blur");
 }
 
+void colors() {
+  if (showColors) {
+    showColors = false;
+    for (int i = 0; i < color_label.length; i++) {
+      cp5.remove(color_label[i]);
+    }
+  }
+  else {
+    showColors = true;
+    //show the color table
+    color_table_black = cp5.addBang("black").setPosition(5, 430).setSize(30, 30).setLabel("").setColorForeground(color(0));
+    color_table_white = cp5.addBang("white").setPosition(35,430).setSize(30, 30).setLabel("").setColorForeground(color(255));
+    color_table_red = cp5.addBang("red").setPosition(65,430).setSize(30, 30).setLabel("").setColorForeground(color(255, 0, 0));
+    color_table_yellow = cp5.addBang("yellow").setPosition(95,430).setSize(30, 30).setLabel("").setColorForeground(color(255, 255, 0));
+    color_table_blue = cp5.addBang("blue").setPosition(5,460).setSize(30, 30).setLabel("").setColorForeground(color(0, 0, 255));
+    color_table_green = cp5.addBang("green").setPosition(35,460).setSize(30, 30).setLabel("").setColorForeground(color(0, 255, 0));
+    color_table_cyan = cp5.addBang("cyan").setPosition(65,460).setSize(30, 30).setLabel("").setColorForeground(color(0, 255, 255));
+    color_table_magenta = cp5.addBang("magenta").setPosition(95,460).setSize(30, 30).setLabel("").setColorForeground(color(255, 0, 255));
+    color_table_silver = cp5.addBang("silver").setPosition(5,490).setSize(30, 30).setLabel("").setColorForeground(color(192, 192, 192));
+    color_table_maroon = cp5.addBang("maroon").setPosition(35,490).setSize(30,30).setLabel("").setColorForeground(color(128, 0, 0));
+    color_table_gray = cp5.addBang("gray").setPosition(65,490).setSize(30, 30).setLabel("").setColorForeground(color(128, 128, 128));
+    color_table_teal = cp5.addBang("teal").setPosition(95,490).setSize(30, 30).setLabel("").setColorForeground(color(0, 128, 128));
+    color_table_navy = cp5.addBang("navy").setPosition(5,520).setSize(30, 30).setLabel("").setColorForeground(color(0, 0, 128));
+    color_table_olive = cp5.addBang("olive").setPosition(35,520).setSize(30, 30).setLabel("").setColorForeground(color(128, 128, 0));
+    color_table_purple = cp5.addBang("purple").setPosition(65,520).setSize(30, 30).setLabel("").setColorForeground(color(128, 0, 128));
+    color_table_orange = cp5.addBang("orange").setPosition(95,520).setSize(30, 30).setLabel("").setColorForeground(color(255, 165, 0));
+    }
+}
+
 
 //image selection method
 void dummyMethod() {
+}
+
+
+//brush functional method
+//TODO: try to make smooth line
+void draw_the_line() {
+   PImage target = displayed_img.get();
+   int startX, startY;
+   startX = mouseX - side_bar_width - brush_size/2;
+   startY = mouseY - top_bar_height - brush_size/2;
+   if (startX > 0 && startX < target.width && startY > 0 && startY < target.height) {
+     for (int y = startY; y < startY + brush_size; y++) {
+       for(int x = startX; x < startX + brush_size; x++){
+         target.set(x, y, brush_color);
+       }
+     }
+   }
+   displayed_img = target;
 }
