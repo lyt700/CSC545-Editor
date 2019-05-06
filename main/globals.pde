@@ -1,10 +1,18 @@
 //All globals in the project
 
-//File globals
+//---File Globals---
 PImage loaded_img;
 PImage displayed_img;
 
-//Window globals
+//---Undo/Redo Globals---
+int history_length = 5;
+Deque<PImage> undo_deque=new ArrayDeque<PImage>(history_length);
+Deque<PImage> redo_deque=new ArrayDeque<PImage>(history_length);
+
+boolean newly_added_history = false;
+boolean recently_undone = false;
+
+//---Window Globals---
 color bg_color = color(100,100,100);
 color bar_colors = color(70,70,70);
 color bar_border_color = color(20,20,20);
@@ -14,7 +22,14 @@ int bar_border_width = 1;
 int min_window_height = 768 + top_bar_height + bar_border_width;
 int min_window_width = 1024 + side_bar_width + bar_border_width;
 
-//controls globals
+//---Controls Globals---
+//Button colors/fonts
+color button_default_color = color(66, 134, 244);
+color button_hover_color = color(59, 120, 220);
+color button_active_color = color(53, 107, 195);
+PFont button_font;
+ControlFont controls_font;
+
 ControlP5 cp5;
 Button colors;
 Button load_button;
@@ -29,8 +44,11 @@ Button brush_button;
 Button erase_button;
 Button sharp_button;
 Button blur_button;
+Button undo_button;
+Button redo_button;
 
-//color table globals
+
+//---Color Table Globals---
 boolean showColors = false;
 String[] color_label = {"black", "white", "red", "yellow", "blue", "green", "cyan", "magenta", "silver",
                          "maroon", "gray", "teal", "navy", "olive", "purple", "orange"};
@@ -44,7 +62,7 @@ Bang color_table_black, color_table_white, color_table_red, color_table_green,
      color_table_silver, color_table_gray, color_table_maroon, color_table_olive,
      color_table_purple, color_table_teal, color_table_navy, color_table_orange;
      
-//brush globals
+//---Brush Globals---
 boolean brush_active = false;
 color brush_color = color(0);
 int brush_size = 9;
