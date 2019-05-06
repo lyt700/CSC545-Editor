@@ -4,6 +4,14 @@
 PImage loaded_img;
 PImage displayed_img;
 
+int history_length = 5;
+
+Deque<PImage> undo_deque=new ArrayDeque<PImage>(history_length);
+Deque<PImage> redo_deque=new ArrayDeque<PImage>(history_length);
+
+boolean newly_added_history = false;
+boolean recently_undone = false;
+
 //Window globals
 color bg_color = color(100,100,100);
 color bar_colors = color(70,70,70);
@@ -15,6 +23,13 @@ int min_window_height = 768 + top_bar_height + bar_border_width;
 int min_window_width = 1024 + side_bar_width + bar_border_width;
 
 //controls globals
+color button_default_color = color(66, 134, 244);
+color button_hover_color = color(59, 120, 220);
+color button_active_color = color(53, 107, 195);
+PFont button_font;
+ControlFont controls_font;
+
+
 ControlP5 cp5;
 Button colors;
 Button load_button;
@@ -29,6 +44,9 @@ Button brush_button;
 Button erase_button;
 Button sharp_button;
 Button blur_button;
+Button undo_button;
+Button redo_button;
+
 
 //color table globals
 boolean showColors = false;

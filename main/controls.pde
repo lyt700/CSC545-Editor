@@ -3,6 +3,7 @@
 //initialize control objects
 void init_controls() {
   cp5 = new ControlP5(this);
+  cp5.setColorBackground(button_default_color).setColorActive(button_active_color).setColorForeground(button_hover_color).setFont(controls_font);
   //load button
   load_button = cp5.addButton("loadButton");
   load_button.setPosition(5, 5).setSize(115,30);
@@ -57,10 +58,20 @@ void init_controls() {
   colors.setLabel("Colors");             
   //TODO - shapes
   
+  //undo button
+  undo_button = cp5.addButton("undoButton");
+  undo_button.setPosition(245, 5).setSize(75,30);
+  undo_button.setLabel("Undo");
+  //redo button
+  redo_button = cp5.addButton("redoButton");
+  redo_button.setPosition(325, 5).setSize(75,30);
+  redo_button.setLabel("Redo");
+  
 }
 
 //draw the controls in the window
 void draw_controls() {
+    
     load_button.setPosition(5, 5).setSize(115,30);
     save_button.setPosition(125, 5).setSize(115,30);
     grayscale_button.setPosition(5, 45).setSize(115,30);
@@ -74,10 +85,33 @@ void draw_controls() {
     sharp_button.setPosition(5, 325).setSize(115,30);
     blur_button.setPosition(5, 360).setSize(115,30);
     colors.setPosition(5, 395).setSize(115,30);
+    undo_button.setPosition(245, 5).setSize(75,30);
+    redo_button.setPosition(325, 5).setSize(75,30);
+    
+    if (brush_active) {
+      brush_button.setColorBackground(button_active_color);
+    } else {
+      brush_button.setColorBackground(button_default_color);
+    }
 }
 
 //method to perform operations when a control event occurs
 public void controlEvent(ControlEvent theEvent) {
+    if ((theEvent.getController().getName() != "loadButton") && (theEvent.getController().getName() != "saveButton") && 
+        (theEvent.getController().getName() != "undoButton") && (theEvent.getController().getName() != "redoButton") && 
+        (theEvent.getController().getName() != "colors") && (theEvent.getController().getName() != "eraseButton")) {
+          if (undo_deque.size() < history_length) {
+             undo_deque.offerFirst(displayed_img);
+          } else if (undo_deque.size() >= history_length) {
+             undo_deque.pollLast();
+             undo_deque.offerFirst(displayed_img);
+          }
+  }
+  
+  if ((theEvent.getController().getName() != "brushButton") && (theEvent.getController().getName() != "colors") && (color_labels.contains(theEvent.getController().getName())) == false) {
+    brush_active = false;
+  } 
+  
   if (theEvent.getController().getName() == "loadButton") {
     selectInput("Select a file to process:", "imgSelected");
   } 
@@ -123,9 +157,16 @@ public void controlEvent(ControlEvent theEvent) {
     //set bursh color to selected color
     brush_color = color_list[i];
   }
+  else   if (theEvent.getController().getName() == "undoButton") {
+    undo();
+  }
+  else   if (theEvent.getController().getName() == "redoButton") {
+    redo();
+  }
   else   if (theEvent.getController().getName() == "nullButton") {
     dummyMethod();
   }
+
 }
 
 //image selection method
@@ -300,4 +341,29 @@ void draw_the_line() {
      }
    }
    displayed_img = target;
+}
+
+void undo() {
+  if (undo_deque.size() > 0) {
+    PImage temp_img;
+    redo_deque.offerFirst(displayed_img);
+    temp_img = undo_deque.pollFirst();
+    if (temp_img != null) {
+      displayed_img = temp_img; 
+    
+    }
+  }
+
+}
+
+void redo() {
+  if (redo_deque.size() > 0) {
+    undo_deque.offerFirst(displayed_img);
+    PImage temp_img = redo_deque.pollFirst();
+    if (temp_img != null) {
+      displayed_img = temp_img; 
+    }
+  }
+
+
 }
