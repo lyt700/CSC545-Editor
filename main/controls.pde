@@ -3,7 +3,7 @@
 //initialize control objects
 void init_controls() {
   cp5 = new ControlP5(this);
-  cp5.setColorBackground(button_default_color).setColorActive(button_active_color).setColorForeground(button_hover_color).setFont(controls_font);
+  cp5.setColorBackground(button_default_color).setColorActive(button_active_color).setColorForeground(button_hover_color).setFont(controls_font); //set the proper colors
   //load button
   load_button = cp5.addButton("loadButton");
   load_button.setPosition(5, 5).setSize(115,30);
@@ -88,6 +88,7 @@ void draw_controls() {
     undo_button.setPosition(245, 5).setSize(75,30);
     redo_button.setPosition(325, 5).setSize(75,30);
     
+    //force the color of the brush button to stay as the active button color when it is active
     if (brush_active) {
       brush_button.setColorBackground(button_active_color);
     } else {
@@ -97,8 +98,10 @@ void draw_controls() {
 
 //method to perform operations when a control event occurs
 public void controlEvent(ControlEvent theEvent) {
-    if ((theEvent.getController().getName() != "loadButton") && (theEvent.getController().getName() != "saveButton") && 
-        (theEvent.getController().getName() != "undoButton") && (theEvent.getController().getName() != "redoButton") && 
+  
+  //when any event occurs that will change the state of the image, push the displayed image into the deque
+  if ((theEvent.getController().getName() != "loadButton") && (theEvent.getController().getName() != "saveButton") && 
+       (theEvent.getController().getName() != "undoButton") && (theEvent.getController().getName() != "redoButton") && 
         (theEvent.getController().getName() != "colors") && (theEvent.getController().getName() != "eraseButton")) {
           if (undo_deque.size() < history_length) {
              undo_deque.offerFirst(displayed_img);
@@ -108,8 +111,11 @@ public void controlEvent(ControlEvent theEvent) {
           }
   }
   
-  if ((theEvent.getController().getName() != "brushButton") && (theEvent.getController().getName() != "colors") && (color_labels.contains(theEvent.getController().getName())) == false) {
-    brush_active = false;
+  //make the brush no longer active when another button is pressed
+  if ((theEvent.getController().getName() != "brushButton") && 
+      (theEvent.getController().getName() != "colors") &&
+        (color_labels.contains(theEvent.getController().getName())) == false) {
+            brush_active = false;
   } 
   
   if (theEvent.getController().getName() == "loadButton") {
@@ -343,6 +349,7 @@ void draw_the_line() {
    displayed_img = target;
 }
 
+//undoes the last change to the image
 void undo() {
   if (undo_deque.size() > 0) {
     PImage temp_img;
@@ -353,9 +360,9 @@ void undo() {
     
     }
   }
-
 }
 
+//redoes the last change to the image
 void redo() {
   if (redo_deque.size() > 0) {
     undo_deque.offerFirst(displayed_img);
@@ -364,6 +371,4 @@ void redo() {
       displayed_img = temp_img; 
     }
   }
-
-
 }
