@@ -82,7 +82,7 @@ public void controlEvent(ControlEvent theEvent) {
     selectInput("Select a file to process:", "imgSelected");
   } 
   else if (theEvent.getController().getName() == "saveButton") {
-    save_img();
+    selectOutput("Select a file to write to:", "fileSelected");
   }
   else   if (theEvent.getController().getName() == "grayscaleButton") {
     grayscale_img();
@@ -136,6 +136,14 @@ void imgSelected(File selection) {
     loaded_img = loadImage(selection.getAbsolutePath());
     displayed_img = loaded_img;
     resize_window(loaded_img);
+  }
+}
+
+void fileSelected(File selection) {
+  if (selection == null) {
+    println("Window was closed or the user hit cancel.");
+  } else {
+    displayed_img.save(selection.getAbsolutePath());
   }
 }
 
