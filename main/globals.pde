@@ -4,6 +4,9 @@
 PImage loaded_img;
 PImage displayed_img;
 
+PGraphics pg; //pgraphics canvas used for drawing
+boolean pg_init = true; //signal for when new image needs to be added to the pg canvas
+
 //---Undo/Redo Globals---
 int history_length = 5;
 Deque<PImage> undo_deque=new ArrayDeque<PImage>(history_length);
@@ -65,4 +68,14 @@ Bang color_table_black, color_table_white, color_table_red, color_table_green,
 //---Brush Globals---
 boolean brush_active = false;
 color brush_color = color(0);
-int brush_size = 9;
+int brush_size = 3;
+
+//arrays holding previous x&y positions for the previous 3 frames
+int[] prev_mx = new int[3], prev_my = new int[3];
+//previous stopping points for the last curve drawn
+int prev_epx, prev_epy;
+
+
+//---Erase Globals---
+boolean erase_active = false;
+int erase_size = 25;
