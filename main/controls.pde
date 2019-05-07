@@ -94,6 +94,13 @@ void draw_controls() {
     } else {
       brush_button.setColorBackground(button_default_color);
     }
+    
+    //force the color of the erase button to stay as the active button color when it is active
+    if (erase_active) {
+      erase_button.setColorBackground(button_active_color);
+    } else {
+      erase_button.setColorBackground(button_default_color);
+    }
 }
 
 //method to perform operations when a control event occurs
@@ -102,7 +109,7 @@ public void controlEvent(ControlEvent theEvent) {
   //when any event occurs that will change the state of the image, push the displayed image into the deque
   if ((theEvent.getController().getName() != "loadButton") && (theEvent.getController().getName() != "saveButton") && 
        (theEvent.getController().getName() != "undoButton") && (theEvent.getController().getName() != "redoButton") && 
-        (theEvent.getController().getName() != "colors") && (theEvent.getController().getName() != "eraseButton")) {
+        (theEvent.getController().getName() != "colors")) {
           if (undo_deque.size() < history_length) {
              undo_deque.offerFirst(displayed_img);
           } else if (undo_deque.size() >= history_length) {
@@ -116,7 +123,10 @@ public void controlEvent(ControlEvent theEvent) {
       (theEvent.getController().getName() != "colors") &&
         (color_labels.contains(theEvent.getController().getName())) == false) {
             brush_active = false;
-  } 
+  }
+  
+  //set erase inactive when any button is pressed
+  erase_active = false;
   
   if (theEvent.getController().getName() == "loadButton") {
     selectInput("Select a file to process:", "imgSelected");
@@ -183,6 +193,7 @@ void imgSelected(File selection) {
     loaded_img = loadImage(selection.getAbsolutePath());
     displayed_img = loaded_img;
     resize_window(loaded_img);
+    pg_init = true; //signal for new image to be loaded into pgraphics canvas
   }
 }
 
@@ -192,11 +203,6 @@ void fileSelected(File selection) {
   } else {
     displayed_img.save(selection.getAbsolutePath());
   }
-}
-
-void save_img() {
-  //TODO - Write this function
-  println("save");
 }
 
 void grayscale_img() {
@@ -283,8 +289,8 @@ void brush_img() {
 }
 
 void erase() {
-  //TODO - Write this function
-  println("erase");
+   if(erase_active) erase_active = false;
+   else erase_active = true;
 }
 
 void sharp() {
@@ -333,20 +339,37 @@ void dummyMethod() {
 
 
 //brush functional method
-//TODO: try to make smooth line
 void draw_the_line() {
-   PImage target = displayed_img.get();
+    if (frameCount%4 == 0) {
+      pg.beginDraw();
+      pg.stroke(brush_color);
+      pg.strokeWeight(brush_size);
+      pg.noFill();
+      pg.bezier(prev_epx-side_bar_width, prev_epy-top_bar_height, prev_mx[1]-side_bar_width, prev_my[1]-top_bar_height, 
+            prev_mx[2]-side_bar_width, prev_my[2]-top_bar_height, mouseX-side_bar_width, mouseY-top_bar_height);
+      prev_epx = mouseX;
+      prev_epy = mouseY;
+      pg.endDraw();
+    } else {
+      prev_mx[(frameCount%4)-1] = mouseX;
+      prev_my[(frameCount%4)-1] = mouseY;
+    }
+}
+//erase edits to original loaded image
+void erase_edits() {
+   pg.beginDraw();
    int startX, startY;
-   startX = mouseX - side_bar_width - brush_size/2;
-   startY = mouseY - top_bar_height - brush_size/2;
-   if (startX > 0 && startX < target.width && startY > 0 && startY < target.height) {
-     for (int y = startY; y < startY + brush_size; y++) {
-       for(int x = startX; x < startX + brush_size; x++){
-         target.set(x, y, brush_color);
+   startX = mouseX - side_bar_width - erase_size/2;
+   startY = mouseY - top_bar_height - erase_size/2;
+   if (startX > 0 && startX < pg.width && startY > 0 && startY < pg.height) {
+     for (int y = startY; y < startY + erase_size; y++) {
+       for(int x = startX; x < startX + erase_size; x++){
+         color c = loaded_img.get(x,y);
+         pg.set(x, y, c);
        }
      }
    }
-   displayed_img = target;
+   pg.endDraw();
 }
 
 //undoes the last change to the image
