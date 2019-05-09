@@ -42,7 +42,6 @@ Button negative_button;
 Button brighten_button;
 Button darken_button;
 Button binary_button;
-Button highlight_button;
 Button brush_button;
 Button erase_button;
 Button sharp_button;
@@ -79,3 +78,7 @@ int prev_epx, prev_epy;
 //---Erase Globals---
 boolean erase_active = false;
 int erase_size = 25;
+
+//---kernels
+float[][] k1 = {{1/9.0, 1/9.0, 1/9.0}, {1/9.0, 1/9.0, 1/9.0}, {1/9.0, 1/9.0, 1/9.0}};
+float[][] k2 = {{0.0, -1.0, 0.0}, {-1.0, 5.0, -1.0}, {0.0, -1.0, 0.0}};
