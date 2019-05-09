@@ -42,7 +42,6 @@ Button negative_button;
 Button brighten_button;
 Button darken_button;
 Button binary_button;
-Button highlight_button;
 Button brush_button;
 Button erase_button;
 Button sharp_button;
@@ -65,7 +64,7 @@ Bang color_table_black, color_table_white, color_table_red, color_table_green,
      color_table_blue, color_table_yellow, color_table_cyan, color_table_magenta,
      color_table_silver, color_table_gray, color_table_maroon, color_table_olive,
      color_table_purple, color_table_teal, color_table_navy, color_table_orange;
-     
+
 //---Brush Globals---
 boolean brush_active = false;
 color brush_color = color(0);
@@ -79,4 +78,8 @@ int prev_epx, prev_epy;
 
 //---Erase Globals---
 boolean erase_active = false;
-int erase_size = 15;
+int erase_size = 25;
+
+//---kernels
+float[][] k1 = {{1/9.0, 1/9.0, 1/9.0}, {1/9.0, 1/9.0, 1/9.0}, {1/9.0, 1/9.0, 1/9.0}};
+float[][] k2 = {{0.0, -1.0, 0.0}, {-1.0, 5.0, -1.0}, {0.0, -1.0, 0.0}};
