@@ -49,7 +49,8 @@ Button sharp_button;
 Button blur_button;
 Button undo_button;
 Button redo_button;
-
+Slider brush_slider;
+Slider erase_slider;
 
 //---Color Table Globals---
 boolean showColors = false;
@@ -78,4 +79,4 @@ int prev_epx, prev_epy;
 
 //---Erase Globals---
 boolean erase_active = false;
-int erase_size = 25;
+int erase_size = 15;

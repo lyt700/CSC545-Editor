@@ -35,7 +35,7 @@ void draw() {
     }
     
     //update curve endpoint position for correct placement at start of new brush stroke
-    if (brush_active && !mousePressed) {
+    if (!mousePressed) {
       prev_epx = mouseX;
       prev_epy = mouseY;
     }

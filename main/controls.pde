@@ -67,6 +67,16 @@ void init_controls() {
   redo_button.setPosition(325, 5).setSize(75,30);
   redo_button.setLabel("Redo");
   
+  //brush size slider
+  brush_slider = cp5.addSlider("brushSlider").setLabel("Brush Size");
+  brush_slider.setPosition(15, 430).setSize(20,200).setRange(1, 15).setNumberOfTickMarks(15);
+  brush_slider.setValue(5).setDecimalPrecision(0);
+  
+  //erase size slider
+  erase_slider = cp5.addSlider("eraseSlider").setLabel("Erase Size");
+  erase_slider.setPosition(80, 430).setSize(20,200).setRange(1, 15).setNumberOfTickMarks(15);
+  erase_slider.setValue(5).setDecimalPrecision(0);
+  
 }
 
 //draw the controls in the window
@@ -87,6 +97,8 @@ void draw_controls() {
     colors.setPosition(5, 395).setSize(115,30);
     undo_button.setPosition(245, 5).setSize(75,30);
     redo_button.setPosition(325, 5).setSize(75,30);
+    brush_slider.setPosition(15, 430).setSize(20,200);
+    erase_slider.setPosition(80, 430).setSize(20,200);
     
     //force the color of the brush button to stay as the active button color when it is active
     if (brush_active) {
@@ -109,7 +121,8 @@ public void controlEvent(ControlEvent theEvent) {
   //when any event occurs that will change the state of the image, push the displayed image into the deque
   if ((theEvent.getController().getName() != "loadButton") && (theEvent.getController().getName() != "saveButton") && 
        (theEvent.getController().getName() != "undoButton") && (theEvent.getController().getName() != "redoButton") && 
-        (theEvent.getController().getName() != "colors")) {
+        (theEvent.getController().getName() != "colors") && (theEvent.getController().getName() != "brushSlider") &&
+          (theEvent.getController().getName() != "eraseSlider")) {
           if (undo_deque.size() < history_length) {
              undo_deque.offerFirst(displayed_img);
           } else if (undo_deque.size() >= history_length) {
@@ -119,14 +132,16 @@ public void controlEvent(ControlEvent theEvent) {
   }
   
   //make the brush no longer active when another button is pressed
-  if ((theEvent.getController().getName() != "brushButton") && 
-      (theEvent.getController().getName() != "colors") &&
+  if ((theEvent.getController().getName() != "brushButton") && (theEvent.getController().getName() != "brushSlider") &&
+       (theEvent.getController().getName() != "eraseSlider") && (theEvent.getController().getName() != "colors") && 
         (color_labels.contains(theEvent.getController().getName())) == false) {
             brush_active = false;
   }
   
   //set erase inactive when any button is pressed
-  erase_active = false;
+  if ((theEvent.getController().getName() != "brushSlider") && (theEvent.getController().getName() != "eraseSlider")) {
+          erase_active = false;
+  }
   
   if (theEvent.getController().getName() == "loadButton") {
     selectInput("Select a file to process:", "imgSelected");
@@ -179,8 +194,11 @@ public void controlEvent(ControlEvent theEvent) {
   else   if (theEvent.getController().getName() == "redoButton") {
     redo();
   }
-  else   if (theEvent.getController().getName() == "nullButton") {
-    dummyMethod();
+  else if ((theEvent.getController().getName() == "brushSlider") && theEvent.getController().isMousePressed()){
+    setBrushSize();
+  }
+  else if ((theEvent.getController().getName() == "brushSlider") && theEvent.getController().isMousePressed()){
+    setEraseSize();
   }
 
 }
@@ -394,4 +412,12 @@ void redo() {
       displayed_img = temp_img; 
     }
   }
+}
+
+void setBrushSize() {
+  brush_size = int(brush_slider.getValue());
+}
+
+void setEraseSize() {
+  erase_size = int(erase_slider.getValue());
 }
