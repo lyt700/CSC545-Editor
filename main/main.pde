@@ -19,6 +19,7 @@ void setup() {
 void draw() {
   draw_window();
   draw_controls();
+  
   if (displayed_img != null) {
     //initialize the pgraphics canvas for new image
     if (pg_init) {

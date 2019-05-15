@@ -3,6 +3,7 @@
 //initialize control objects
 void init_controls() {
   cp5 = new ControlP5(this);
+  cp5.setAutoDraw(false);
   cp5.setColorBackground(button_default_color).setColorActive(button_active_color).setColorForeground(button_hover_color).setFont(controls_font); //set the proper colors
   //load button
   load_button = cp5.addButton("loadButton");
@@ -64,20 +65,20 @@ void init_controls() {
   redo_button.setLabel("Redo");
 
   //brush size slider
-  brush_slider = cp5.addSlider("brushSlider").setLabel("Brush Size");
-  brush_slider.setPosition(15, 430).setSize(20,200).setRange(1, 15).setNumberOfTickMarks(15);
+  brush_slider = cp5.addSlider("brushSlider").setLabel("");
+  brush_slider.setPosition(15, 395).setSize(20,200).setRange(1, 15).setNumberOfTickMarks(15);
   brush_slider.setValue(5).setDecimalPrecision(0);
 
   //erase size slider
-  erase_slider = cp5.addSlider("eraseSlider").setLabel("Erase Size");
-  erase_slider.setPosition(80, 430).setSize(20,200).setRange(1, 15).setNumberOfTickMarks(15);
+  erase_slider = cp5.addSlider("eraseSlider").setLabel("");
+  erase_slider.setPosition(80, 395).setSize(20,200).setRange(1, 15).setNumberOfTickMarks(15);
   erase_slider.setValue(5).setDecimalPrecision(0);
 
 }
 
 //draw the controls in the window
 void draw_controls() {
-
+    cp5.draw();
     load_button.setPosition(5, 5).setSize(115,30);
     save_button.setPosition(125, 5).setSize(115,30);
     grayscale_button.setPosition(5, 45).setSize(115,30);
@@ -92,8 +93,50 @@ void draw_controls() {
     colors.setPosition(5, 360).setSize(115,30);
     undo_button.setPosition(245, 5).setSize(75,30);
     redo_button.setPosition(325, 5).setSize(75,30);
-    brush_slider.setPosition(15, 430).setSize(20,200);
-    erase_slider.setPosition(80, 430).setSize(20,200);
+    if (showColors) {
+      brush_slider.setPosition(15, 525).setSize(20,200);
+      erase_slider.setPosition(80, 525).setSize(20,200);
+      //brush text
+      pushMatrix();
+      translate(30,720);
+      rotate(-HALF_PI);
+      fill(255, 255, 255);
+      textFont(button_font);
+      textSize(10);
+      text("Brush Slider", 0, 0);
+      popMatrix();
+      //erase text
+      pushMatrix();
+      translate(95,720);
+      rotate(-HALF_PI);
+      fill(255, 255, 255);
+      textFont(button_font);
+      textSize(10);
+      text("Erase Slider", 0, 0);
+      popMatrix();
+    } else {
+      brush_slider.setPosition(15, 395).setSize(20,200);
+      erase_slider.setPosition(80, 395).setSize(20,200);
+      //brush text
+      pushMatrix();
+      translate(30,590);
+      rotate(-HALF_PI);
+      fill(255, 255, 255);
+      textFont(button_font);
+      textSize(10);
+      text("Brush Slider", 0, 0);
+      popMatrix();
+      //erase text
+      pushMatrix();
+      translate(95,590);
+      rotate(-HALF_PI);
+      fill(255, 255, 255);
+      textFont(button_font);
+      textSize(10);
+      text("Erase Slider", 0, 0);
+      popMatrix();
+    }
+
 
     //force the color of the brush button to stay as the active button color when it is active
     if (brush_active) {
@@ -108,6 +151,8 @@ void draw_controls() {
     } else {
       erase_button.setColorBackground(button_default_color);
     }
+    
+
 }
 
 //method to perform operations when a control event occurs
@@ -189,7 +234,7 @@ public void controlEvent(ControlEvent theEvent) {
   else if ((theEvent.getController().getName() == "brushSlider") && theEvent.getController().isMousePressed()){
     setBrushSize();
   }
-  else if ((theEvent.getController().getName() == "brushSlider") && theEvent.getController().isMousePressed()){
+  else if ((theEvent.getController().getName() == "eraseSlider") && theEvent.getController().isMousePressed()){
     setEraseSize();
   }
 
@@ -337,22 +382,22 @@ void colors() {
   else {
     showColors = true;
     //show the color table
-    color_table_black = cp5.addBang("black").setPosition(5, 400).setSize(30, 30).setLabel("").setColorForeground(color(0));
-    color_table_white = cp5.addBang("white").setPosition(35,400).setSize(30, 30).setLabel("").setColorForeground(color(255));
-    color_table_red = cp5.addBang("red").setPosition(65,400).setSize(30, 30).setLabel("").setColorForeground(color(255, 0, 0));
-    color_table_yellow = cp5.addBang("yellow").setPosition(95,400).setSize(30, 30).setLabel("").setColorForeground(color(255, 255, 0));
-    color_table_blue = cp5.addBang("blue").setPosition(5,430).setSize(30, 30).setLabel("").setColorForeground(color(0, 0, 255));
-    color_table_green = cp5.addBang("green").setPosition(35,430).setSize(30, 30).setLabel("").setColorForeground(color(0, 255, 0));
-    color_table_cyan = cp5.addBang("cyan").setPosition(65,430).setSize(30, 30).setLabel("").setColorForeground(color(0, 255, 255));
-    color_table_magenta = cp5.addBang("magenta").setPosition(95,430).setSize(30, 30).setLabel("").setColorForeground(color(255, 0, 255));
-    color_table_silver = cp5.addBang("silver").setPosition(5,460).setSize(30, 30).setLabel("").setColorForeground(color(192, 192, 192));
-    color_table_maroon = cp5.addBang("maroon").setPosition(35,460).setSize(30,30).setLabel("").setColorForeground(color(128, 0, 0));
-    color_table_gray = cp5.addBang("gray").setPosition(65,460).setSize(30, 30).setLabel("").setColorForeground(color(128, 128, 128));
-    color_table_teal = cp5.addBang("teal").setPosition(95,460).setSize(30, 30).setLabel("").setColorForeground(color(0, 128, 128));
-    color_table_navy = cp5.addBang("navy").setPosition(5,490).setSize(30, 30).setLabel("").setColorForeground(color(0, 0, 128));
-    color_table_olive = cp5.addBang("olive").setPosition(35,490).setSize(30, 30).setLabel("").setColorForeground(color(128, 128, 0));
-    color_table_purple = cp5.addBang("purple").setPosition(65,490).setSize(30, 30).setLabel("").setColorForeground(color(128, 0, 128));
-    color_table_orange = cp5.addBang("orange").setPosition(95,490).setSize(30, 30).setLabel("").setColorForeground(color(255, 165, 0));
+    color_table_black = cp5.addBang("black").setPosition(5, 400).setSize(28, 30).setLabel("").setColorForeground(color(0));
+    color_table_white = cp5.addBang("white").setPosition(33,400).setSize(29, 30).setLabel("").setColorForeground(color(255));
+    color_table_red = cp5.addBang("red").setPosition(62,400).setSize(30, 29).setLabel("").setColorForeground(color(255, 0, 0));
+    color_table_yellow = cp5.addBang("yellow").setPosition(91,400).setSize(29, 30).setLabel("").setColorForeground(color(255, 255, 0));
+    color_table_blue = cp5.addBang("blue").setPosition(5,430).setSize(28, 30).setLabel("").setColorForeground(color(0, 0, 255));
+    color_table_green = cp5.addBang("green").setPosition(33,430).setSize(29, 30).setLabel("").setColorForeground(color(0, 255, 0));
+    color_table_cyan = cp5.addBang("cyan").setPosition(62,430).setSize(29, 30).setLabel("").setColorForeground(color(0, 255, 255));
+    color_table_magenta = cp5.addBang("magenta").setPosition(91,430).setSize(29, 30).setLabel("").setColorForeground(color(255, 0, 255));
+    color_table_silver = cp5.addBang("silver").setPosition(5,460).setSize(28, 30).setLabel("").setColorForeground(color(192, 192, 192));
+    color_table_maroon = cp5.addBang("maroon").setPosition(33,460).setSize(29,30).setLabel("").setColorForeground(color(128, 0, 0));
+    color_table_gray = cp5.addBang("gray").setPosition(62,460).setSize(29, 30).setLabel("").setColorForeground(color(128, 128, 128));
+    color_table_teal = cp5.addBang("teal").setPosition(91,460).setSize(29, 30).setLabel("").setColorForeground(color(0, 128, 128));
+    color_table_navy = cp5.addBang("navy").setPosition(5,490).setSize(28, 30).setLabel("").setColorForeground(color(0, 0, 128));
+    color_table_olive = cp5.addBang("olive").setPosition(33,490).setSize(29, 30).setLabel("").setColorForeground(color(128, 128, 0));
+    color_table_purple = cp5.addBang("purple").setPosition(62,490).setSize(29, 30).setLabel("").setColorForeground(color(128, 0, 128));
+    color_table_orange = cp5.addBang("orange").setPosition(91,490).setSize(29, 30).setLabel("").setColorForeground(color(255, 165, 0));
     }
 }
 
