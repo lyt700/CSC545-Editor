@@ -8,7 +8,7 @@ PGraphics pg; //pgraphics canvas used for drawing
 boolean pg_init = true; //signal for when new image needs to be added to the pg canvas
 
 //---Undo/Redo Globals---
-int history_length = 5;
+int history_length = 15;
 Deque<PImage> undo_deque=new ArrayDeque<PImage>(history_length);
 Deque<PImage> redo_deque=new ArrayDeque<PImage>(history_length);
 
